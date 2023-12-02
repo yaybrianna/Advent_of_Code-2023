@@ -7,15 +7,15 @@ static GREEN_MAX_COUNT: u32 = 13;
 static BLUE_MAX_COUNT: u32 = 14;
 
 fn main() {
-    //let file_path = "input.txt";
-    let file_path = "test_case.txt";
+    let file_path = "input.txt";
+    //let file_path = "test_case.txt";
     let data = load_input(&file_path);
     let games: Vec<Game> = game::parse_input_to_games(data);
     let valid_games = get_valid_games(games);
 
     let mut id_sum = 0;
     for valid_game in valid_games {
-        println!("Valid Game ID: {}",id_sum);
+        println!("Valid Game ID: {}",valid_game.id);
         id_sum += valid_game.id
     }
     println!("ID Sumation: {}", id_sum);

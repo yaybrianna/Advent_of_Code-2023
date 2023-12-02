@@ -11,7 +11,7 @@ pub fn parse_input_to_games(file: String) -> Vec<Game> {
 pub fn parse_game_from_line(line: &str) -> Game {
     let game_vec: Vec<&str> = line.split(": ").map(|s| s).collect();
     let game_string = game_vec[0];
-    let set_strings: Vec<&str> = game_vec[1].split(";").map(|s| s).collect();
+    let set_strings: Vec<&str> = game_vec[1].split("; ").map(|s| s).collect();
     let game = Game {
         id: game_string.split(" ").map(|s| s).collect::<Vec<&str>>()[1]
             .parse::<u32>()
