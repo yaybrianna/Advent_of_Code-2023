@@ -1,5 +1,5 @@
-use std::{fs, char::from_digit};
 use regex::Regex;
+use std::fs;
 
 fn main() {
     //let file_path = "input.txt";
@@ -16,22 +16,29 @@ fn load_input(file_path: &str) -> String {
     return fs::read_to_string(file_path).expect("Unable to read file");
 }
 
-
 fn get_calibration_number_from_line(line: &str) -> u32 {
-    let mut number_as_string: String = String::from("");
-    let mut number_vec: Vec<u32> = Vec::new();
-    
-    let mut answer_vec: Vec<u32> = vec![number_vec[0], number_vec[number_vec.len() - 1]];
-    let line_answer: String = answer_vec.into_iter().map(|d|from_digit(d, 10).unwrap()).collect();
+
+    let number_vec: Vec<u32> = get_all_possible_numbers_from_line(line);
+    let answer_vec: Vec<String> = vec![number_vec[0].to_string(), number_vec[number_vec.len() - 1].to_string()];
+    let line_answer = answer_vec.join("");
+
     println!("Line Number: {}", line_answer);
     return line_answer.parse::<u32>().unwrap();
 }
 
-fn get_all_possible_numbers_from_line(line: &str) -> Vec<u32>{
-    let mut temp_string = String::from("");
-    let mut mut_line = String::from(line);
-
-
+fn get_all_possible_numbers_from_line(line: &str) -> Vec<u32> {
+    let regex = Regex::new("(zero|one|two|three|four|five|six|seven|eight|nine|[0-9])").unwrap();
+    let mut return_vec: Vec<u32> = vec![];    
+    for (_, [match_str]) in regex.captures_iter(line).map(|m| m.extract()) {
+        if match_str.parse::<u32>().is_ok() {
+            return_vec.push(match_str.parse::<u32>().unwrap());
+        }else {
+            let number =  NUMBERS.iter().position(|&n| n.contains(match_str)).unwrap() as u32;
+            return_vec.push(number);
+        }
+    }
+    return return_vec;
 }
 
-static NUMBER_REGEX: &str = "zero|one|two|three|four|five|six|seven|eight|nine|[0-9]";
+
+static NUMBERS: &'static [&str] = &["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
