@@ -16,7 +16,7 @@ fn main() {
     let mut id_sum = 0;
     let mut power_sum: u32 = 0;
     for game in &games {
-        let min_set_power = get_game_power_needed(&game);
+        let min_set_power = game.minimum_set_power;
         println!("Game ID: {}, Min Set Power: {}", game.id, min_set_power);
         power_sum += min_set_power;
     }
@@ -59,14 +59,4 @@ fn is_die_count_within_limit(set: &Set) -> bool {
         && set.green_die_count <= GREEN_MAX_COUNT;
 }
 
-fn get_game_power_needed(game: &Game) -> u32 {
-    let mut power_needed = 0;
-    for set in &game.sets {
-        power_needed = if set.power > power_needed {
-            set.power
-        } else {
-            power_needed
-        }
-    }
-    return power_needed;
-}
+

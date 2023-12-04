@@ -10,13 +10,41 @@ pub fn parse_game_from_line(line: &str) -> Game {
     let game_vec: Vec<&str> = line.split(": ").map(|s| s).collect();
     let game_string = game_vec[0];
     let set_strings: Vec<&str> = game_vec[1].split("; ").map(|s| s).collect();
+    let sets_vec = parse_sets_from_set_strings(set_strings);
     let game = Game {
         id: game_string.split(" ").map(|s| s).collect::<Vec<&str>>()[1]
             .parse::<u32>()
             .unwrap(),
-        sets: parse_sets_from_set_strings(set_strings),
+        minimum_set_power: get_minimum_set_power(&sets_vec),
+        sets: sets_vec
     };
     return game;
+}
+
+pub fn get_minimum_set_power(sets: &Vec<Set>) -> u32{
+    let mut maximum_blue: u32 = 0;
+    let mut maximum_red: u32 = 0;
+    let mut maximum_green: u32 = 0;
+
+    for set in sets {
+        maximum_blue = if set.blue_die_count > maximum_blue {
+            set.blue_die_count
+        }else{
+            maximum_blue
+        };
+        maximum_red = if set.red_die_count > maximum_red {
+            set.red_die_count
+        }else{
+            maximum_red
+        };
+        maximum_green = if set.green_die_count > maximum_green {
+            set.green_die_count
+        }else{
+             maximum_green
+        };
+    }
+
+    return maximum_blue * maximum_green * maximum_red
 }
 
 pub fn parse_sets_from_set_strings(set_strings: Vec<&str>) -> Vec<Set> {
@@ -41,7 +69,7 @@ pub fn parse_set_from_set_string(set_string: &str) -> Set {
         .iter()
         .find(|s| s.contains("green"))
         .unwrap_or(&"");
-    let mut set: Set = Set {
+    let set: Set = Set {
         green_die_count: green_string.split(" ").collect::<Vec<&str>>()[0]
             .parse::<u32>()
             .unwrap_or(0),
@@ -51,42 +79,19 @@ pub fn parse_set_from_set_string(set_string: &str) -> Set {
         blue_die_count: blue_string.split(" ").collect::<Vec<&str>>()[0]
             .parse::<u32>()
             .unwrap_or(0),
-        power: 0,
     };
-    set.power = parse_set_power(&set);
     return set;
 }
 
-fn parse_set_power(set: &Set) -> u32{
-    let  blue_count = if set.blue_die_count == 0 {
-        1
-    }else{
-        set.blue_die_count
-    };
-    let red_count = if set.red_die_count == 0 {
-        1
-    }else{
-        set.red_die_count
-    };
-    let  green_count = if set.green_die_count == 0 {
-        1
-    }else{
-        set.green_die_count
-    };
-    
-
-
-    return blue_count * red_count * green_count;
-}
 
 pub struct Game {
     pub id: u32,
     pub sets: Vec<Set>,
+    pub minimum_set_power: u32
 }
 
 pub struct Set {
     pub green_die_count: u32,
     pub red_die_count: u32,
     pub blue_die_count: u32,
-    pub power: u32,
 }
