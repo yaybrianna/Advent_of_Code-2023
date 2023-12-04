@@ -1,5 +1,3 @@
-
-
 pub fn parse_input_to_games(file: String) -> Vec<Game> {
     let mut games: Vec<Game> = vec![];
     for line in file.lines() {
@@ -31,10 +29,19 @@ pub fn parse_sets_from_set_strings(set_strings: Vec<&str>) -> Vec<Set> {
 
 pub fn parse_set_from_set_string(set_string: &str) -> Set {
     let color_strings: Vec<&str> = set_string.split(", ").map(|s| s).collect();
-    let blue_string = color_strings.iter().find(|s| s.contains("blue")).unwrap_or(&"");
-    let red_string = color_strings.iter().find(|s| s.contains("red")).unwrap_or(&"");
-    let green_string = color_strings.iter().find(|s| s.contains("green")).unwrap_or(&"");
-    let set: Set = Set {
+    let blue_string = color_strings
+        .iter()
+        .find(|s| s.contains("blue"))
+        .unwrap_or(&"");
+    let red_string = color_strings
+        .iter()
+        .find(|s| s.contains("red"))
+        .unwrap_or(&"");
+    let green_string = color_strings
+        .iter()
+        .find(|s| s.contains("green"))
+        .unwrap_or(&"");
+    let mut set: Set = Set {
         green_die_count: green_string.split(" ").collect::<Vec<&str>>()[0]
             .parse::<u32>()
             .unwrap_or(0),
@@ -44,8 +51,32 @@ pub fn parse_set_from_set_string(set_string: &str) -> Set {
         blue_die_count: blue_string.split(" ").collect::<Vec<&str>>()[0]
             .parse::<u32>()
             .unwrap_or(0),
+        power: 0,
     };
+    set.power = parse_set_power(&set);
     return set;
+}
+
+fn parse_set_power(set: &Set) -> u32{
+    let  blue_count = if set.blue_die_count == 0 {
+        1
+    }else{
+        set.blue_die_count
+    };
+    let red_count = if set.red_die_count == 0 {
+        1
+    }else{
+        set.red_die_count
+    };
+    let  green_count = if set.green_die_count == 0 {
+        1
+    }else{
+        set.green_die_count
+    };
+    
+
+
+    return blue_count * red_count * green_count;
 }
 
 pub struct Game {
@@ -57,4 +88,5 @@ pub struct Set {
     pub green_die_count: u32,
     pub red_die_count: u32,
     pub blue_die_count: u32,
+    pub power: u32,
 }
