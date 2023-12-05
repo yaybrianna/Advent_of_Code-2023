@@ -7,15 +7,15 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'day2_cube_conundrum'",
+            "name": "Debug executable 'day3_gear_ratios'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=day2_cube_conundrum",
-                    "--package=day2_cube_conundrum"
+                    "--bin=day3_gear_ratios",
+                    "--package=day3_gear_ratios"
                 ],
                 "filter": {
-                    "name": "day2_cube_conundrum",
+                    "name": "day3_gear_ratios",
                     "kind": "bin"
                 }
             },
@@ -25,16 +25,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'day2_cube_conundrum'",
+            "name": "Debug unit tests in executable 'day3_gear_ratios'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=day2_cube_conundrum",
-                    "--package=day2_cube_conundrum"
+                    "--bin=day3_gear_ratios",
+                    "--package=day3_gear_ratios"
                 ],
                 "filter": {
-                    "name": "day2_cube_conundrum",
+                    "name": "day3_gear_ratios",
                     "kind": "bin"
                 }
             },
