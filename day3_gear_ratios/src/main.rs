@@ -2,13 +2,23 @@ use regex::Regex;
 use std::fs;
 
 fn main() {
-    //let file_path = "input.txt";
-    let file_path = "test_case.txt";
+    let file_path = "input.txt";
+    //let file_path = "test_case.txt";
     let data = load_input(&file_path);
     let vec_2d_data = convert_input_to_2d_vect(data);
     let sym_positions = get_all_symbol_positions(&vec_2d_data);
     let parts = get_all_parts(&vec_2d_data);
-    println!("{:?}", parts);
+    let valid_parts: Vec<Part> = parts
+        .into_iter()
+        .filter(|p| is_valid_part(p, &sym_positions))
+        .collect();
+
+    let mut part_num_sum = 0;
+
+    for valid_part in valid_parts {
+        part_num_sum += valid_part.value;
+    }
+    println!("Part Sum: {}", part_num_sum);
 }
 
 fn load_input(file_path: &str) -> String {
@@ -64,12 +74,37 @@ fn get_all_parts(input_vec_2d: &Vec<Vec<char>>) -> Vec<Part> {
                 },
             };
             parts.push(part);
-
         }
-        row_count+=1;
+        row_count += 1;
     }
 
     return parts;
+}
+
+fn is_valid_part(part: &Part, sym_positions: &Vec<Position>) -> bool {
+    let row_start = if part.position.row == 0 {
+        0
+    } else {
+        part.position.row - 1
+    };
+    let col_start = if part.position.col == 0 {
+        0
+    } else {
+        part.position.col - 1
+    };
+    let row_end = part.position.row + 1;
+    let col_end = part.position.col + part.size + 1;
+    for row_pos in row_start..(row_end + 1) {
+        for col_pos in col_start..(col_end) {
+            if sym_positions
+                .into_iter()
+                .any(|p| p.row == row_pos && p.col == col_pos)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 #[derive(Debug)]
